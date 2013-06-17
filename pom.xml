@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.eisele.demo</groupId>
+    <artifactId>spec-test</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>spec-test</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jboss.test.audit.version>1.1.0.Final</jboss.test.audit.version>
+        <java.source.version>1.6</java.source.version>
+        <java.target.version>1.6</java.target.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.8.5</version>
+        </dependency>
+    
+        <dependency>
+            <groupId>org.jboss.test-audit</groupId>
+            <artifactId>jboss-test-audit-api</artifactId>
+            <version>${jboss.test.audit.version}</version>
+        </dependency>
+     
+        <dependency>
+            <groupId>org.jboss.test-audit</groupId>
+            <artifactId>jboss-test-audit-impl</artifactId>
+            <version>${jboss.test.audit.version}</version>
+        </dependency>
+     
+    </dependencies>
+  
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.bsc.maven</groupId>
+                <artifactId>maven-processor-plugin</artifactId>
+                <version>2.0.4</version>
+                <configuration>
+                    <defaultOutputDirectory>${basedir}/target/coverage-report</defaultOutputDirectory>
+                    <processors>
+                        <processor>org.jboss.test.audit.report.CoverageProcessor</processor>
+                    </processors>
+                    <compilerArguments>-AauditXml=${basedir}/src/test/resources/audit.xml
+                        -AoutputDir=${basedir}/target/coverage-report -source ${java.source.version}
+                        -target ${java.target.version}
+                    </compilerArguments>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>process</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>process-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+          
+        </plugins>
+    </build>
+    <repositories>
+        <repository>
+            <id>jboss-maven2-brew</id>
+            <name>JBoss Maven 2 Brew Repository</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
+            <layout>default</layout>
+       
+        </repository>
+    </repositories>
+</project>
